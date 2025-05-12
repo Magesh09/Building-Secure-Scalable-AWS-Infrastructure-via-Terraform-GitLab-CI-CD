@@ -1,6 +1,6 @@
 # Launch Template for EC2 Instances
 resource "aws_launch_template" "ec2_launch_template" {
-  name = "yt-web-server"
+  name = "web-server"
 
   image_id      = "ami-0f88e80871fd81e91" //Copy the ami id from aws console
   instance_type = "t2.micro"
@@ -15,7 +15,7 @@ resource "aws_launch_template" "ec2_launch_template" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name = "yt-ec2-web-server"
+      Name = "ec2-web-server"
     }
   }
 }

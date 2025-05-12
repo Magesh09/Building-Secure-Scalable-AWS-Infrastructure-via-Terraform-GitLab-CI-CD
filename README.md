@@ -6,6 +6,12 @@ Infrastructure state is managed using a *remote Terraform backend*, allowing con
 
 ---
 
+## *Architecture Diagram*
+
+![Architecture Diagram](images/Image1.png)
+![Architecture Diagram](images/Image2.png)
+
+
 ## *Tech Stack Used*
 - *Terraform* – Infrastructure as Code (IaC)
 - *GitLab CI/CD* – Continuous Integration and Deployment

@@ -1,0 +1,60 @@
+image:
+  name: hashicorp/terraform:1.5.0
+  entrypoint: [""]
+
+variables:
+  TF_VAR_aws_access_key_id: $AWS_ACCESS_KEY_ID
+  TF_VAR_aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
+  TF_VAR_aws_region: $AWS_DEFAULT_REGION
+  TF_BACKEND_BUCKET: "tf-state-file-prod"
+  TF_WORKSPACE: "prod"
+
+stages:
+  - init
+  - validate
+  - plan
+  - apply
+  - destroy
+
+before_script:
+  - terraform -chdir=terraform init -backend-config="bucket=$TF_BACKEND_BUCKET" -backend-config="key=terraform/$TF_WORKSPACE.tfstate" -backend-config="region=$AWS_DEFAULT_REGION"
+
+
+init:
+  stage: init
+  script:
+    - echo "Terraform init completed."
+  only:
+    - branches
+
+validate:
+  stage: validate
+  script:
+    - terraform -chdir=terraform validate
+  only:
+    - branches
+
+plan:
+  stage: plan
+  script:
+    - terraform -chdir=terraform plan -out=tfplan
+  artifacts:
+    paths:
+      - terraform/tfplan
+  only:
+    - branches
+
+apply:
+  stage: apply
+  script:
+    - terraform -chdir=terraform apply -auto-approve tfplan
+  only:
+    - branches
+
+destroy:
+  stage: destroy
+  script:
+    - terraform -chdir=terraform destroy -auto-approve
+  when: manual
+  only:
+    - branches
